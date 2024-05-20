@@ -1,1 +1,2 @@
 # kaggle_competition
+Kaggle挑戰的紀錄

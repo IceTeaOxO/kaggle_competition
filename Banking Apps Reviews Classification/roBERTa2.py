@@ -89,6 +89,14 @@ for text in test_texts:
     pred_label = torch.argmax(probabilities, dim=1).item()  # 獲取預測標籤
     predictions.append(pred_label)
 
+# 將預測結果轉換為顆星評分
+pred_stars = [str(round(pred.argmax() + 1)) + ' 顆星' for pred in predictions]
+
+
 # 儲存結果
-result_df = pd.DataFrame({"index": test_data["index"], "pred": predictions})
+result_df = pd.DataFrame({"index": test_data["index"], "pred": pred_stars})
 result_df.to_csv("result.csv", index=False)
+
+# 儲存訓練後的模型
+model_path = "./saved_model"  # 指定模型的儲存路徑
+trainer.save_model(model_path)

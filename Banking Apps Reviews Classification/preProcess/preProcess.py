@@ -80,7 +80,7 @@ def preprocess_text(text):
     text = lemmatization(text)
     return text
 
-df = pd.read_csv('Banking Apps Reviews Classification/train_df.csv')
+df = pd.read_csv('Banking Apps Reviews Classification/train_df.csv', encoding='utf-8', errors='replace')
 
 # 對text欄位進行中文文本預處理
 df['text'] = df['text'].apply(preprocess_text)

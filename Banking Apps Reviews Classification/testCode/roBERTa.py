@@ -13,7 +13,7 @@ def preprocess_text(text, label):
     return inputs
 
 # 讀取訓練資料
-train_data = pd.read_csv("train_df.csv")
+train_data = pd.read_csv("Banking Apps Reviews Classification/train_preprocess_v3.csv")
 
 # 分割訓練集和驗證集
 train_texts, train_labels = train_data["text"].tolist(), train_data["score"].tolist()

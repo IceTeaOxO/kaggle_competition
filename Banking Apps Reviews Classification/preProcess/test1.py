@@ -87,6 +87,8 @@ def replace_emojis_icon(text):
 
 
 def preprocess_text(text):
+    # 將空值用 "good" 填入
+    df['text'].fillna('good', inplace=True)
     
     # 分詞
     text = chinese_word_segmentation(text)
@@ -104,10 +106,17 @@ def preprocess_text(text):
     return text
 
 df = pd.read_csv('Banking Apps Reviews Classification/train_df.csv')
+# 找到包含空值的行
+# rows_with_null = df[df['text'].isnull()]
 
+# # 獲取包含空值的行的索引
+# null_indexes = rows_with_null.index
+
+# print(null_indexes)
+# print(df.loc[null_indexes, 'text'])
 # 對text欄位進行中文文本預處理
 df['text'] = df['text'].apply(preprocess_text)
 
 # 儲存預處理後的資料為train_preprocess.csv文件
-df.to_csv('Banking Apps Reviews Classification/train_preprocess_v2.csv', index=False)
+df.to_csv('Banking Apps Reviews Classification/train_preprocess_v3.csv', index=False)
 

@@ -93,11 +93,11 @@ def preprocess_text(text):
     # 分詞
     text = chinese_word_segmentation(text)
     # 去除停用詞
-    text = remove_chinese_stopwords(text)
+    # text = remove_chinese_stopwords(text)
     text = remove_numbers(text)
     # text = remove_special_characters(text)
     text = lowercase_text(text)
-    text = remove_characters(text)
+    # text = remove_characters(text)
     text = remove_stopwords(text)
     text = replace_emojis_icon(text)
     
@@ -105,7 +105,7 @@ def preprocess_text(text):
     # text = lemmatization(text)
     return text
 
-df = pd.read_csv('Banking Apps Reviews Classification/train_df.csv')
+df = pd.read_csv('Banking Apps Reviews Classification/test_df.csv')
 # 找到包含空值的行
 # rows_with_null = df[df['text'].isnull()]
 
@@ -118,5 +118,5 @@ df = pd.read_csv('Banking Apps Reviews Classification/train_df.csv')
 df['text'] = df['text'].apply(preprocess_text)
 
 # 儲存預處理後的資料為train_preprocess.csv文件
-df.to_csv('Banking Apps Reviews Classification/train_preprocess_v3.csv', index=False)
+df.to_csv('Banking Apps Reviews Classification/test_preprocess_v4.csv', index=False)
 

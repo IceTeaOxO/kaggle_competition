@@ -2,6 +2,7 @@ kaggle
 model
 saved_model
 logs
+results_continue_training
 results
 # Byte-compiled / optimized / DLL files
 __pycache__/

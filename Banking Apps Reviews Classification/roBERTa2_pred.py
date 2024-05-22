@@ -5,7 +5,7 @@ import torch
 max_length = 55
 
 # 載入模型和tokenizer
-model_path = "./results/checkpoint-10500"  # 指定之前訓練好的模型的路徑
+model_path = "./results/checkpoint-10000"  # 指定之前訓練好的模型的路徑
 model = RobertaForSequenceClassification.from_pretrained(model_path)
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 

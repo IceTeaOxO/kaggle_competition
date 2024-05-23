@@ -111,7 +111,7 @@ def preprocess_text(text):
 
 # 計算text欄位的字數，並將結果添加到text欄位中
 def calc_text(text):
-    text = str(text)+"。留言字數:"+str(len(str(text)))
+    text = "留言字數:"+str(len(str(text)))+"。"+str(text)
     return text
 
 
@@ -132,7 +132,7 @@ def version7(text):
 
     return text
 
-df = pd.read_csv('Banking Apps Reviews Classification/test_df.csv')
+df = pd.read_csv('Banking Apps Reviews Classification/train_df.csv')
 # 找到包含空值的行
 # rows_with_null = df[df['text'].isnull()]
 
@@ -142,7 +142,7 @@ df = pd.read_csv('Banking Apps Reviews Classification/test_df.csv')
 # print(null_indexes)
 # print(df.loc[null_indexes, 'text'])
 # 對text欄位進行中文文本預處理
-# df.drop_duplicates(subset=['text'], inplace=True)
+df.drop_duplicates(subset=['text'], inplace=True)
 
 df['text'] = df['text'].apply(calc_text)
 df['text'] = df['text'].apply(version6)
@@ -155,5 +155,5 @@ df['text'] = df['text'].apply(version6)
 
 
 # 儲存預處理後的資料為train_preprocess.csv文件
-df.to_csv('Banking Apps Reviews Classification/test_preprocess_v7.csv', index=False)
+df.to_csv('Banking Apps Reviews Classification/train_preprocess_v7.csv', index=False)
 

@@ -92,3 +92,4 @@ GRU+OverSampling (5+40) epochs，準確率0.378，發現2~4星預測比例大幅
 
 
 
+

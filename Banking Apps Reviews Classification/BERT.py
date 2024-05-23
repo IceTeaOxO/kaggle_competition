@@ -26,7 +26,7 @@ class CustomDataset(Dataset):
         return inputs
 
 # 讀取訓練資料
-train_data = pd.read_csv("Banking Apps Reviews Classification/train_preprocess_v6.csv")
+train_data = pd.read_csv("Banking Apps Reviews Classification/train_preprocess_v7.csv")
 train_data['text'].fillna('good', inplace=True)
 # 分割訓練集和驗證集
 train_texts, train_labels = train_data["text"].tolist(), train_data["score"].tolist()
@@ -57,9 +57,9 @@ val_dataset = CustomDataset(val_texts, val_labels, tokenizer, max_length)
 # 設置訓練參數，包括 Early Stopping
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=1,
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=4,
+    num_train_epochs=2,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
@@ -85,7 +85,7 @@ trainer.train()
 
 # 進行推論
 test_data = pd.read_csv("Banking Apps Reviews Classification/test_preprocess_v6.csv")
-test_data['text'].fillna('good', inplace=True)
+test_data['text'].fillna('N/A', inplace=True)
 
 test_texts = test_data["text"].tolist()
 
@@ -105,8 +105,8 @@ pred_stars = [str(round(pred + 1)) + ' 顆星' for pred in predictions]
 
 # 儲存推論結果
 result_df = pd.DataFrame({"index": test_data["index"], "pred": pred_stars})
-result_df.to_csv("inference_result_BERT_chinese_v6_5.csv", index=False)
+result_df.to_csv("inference_result_BERT_chinese_v7.csv", index=False)
 
 # 儲存訓練後的模型
-model_path = "./model/saved_model_BERT_chinese_v6_5"  # 指定模型的儲存路徑
+model_path = "./model/saved_model_BERT_chinese_v7"  # 指定模型的儲存路徑
 trainer.save_model(model_path)

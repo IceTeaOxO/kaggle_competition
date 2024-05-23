@@ -85,7 +85,8 @@ GRU+OverSampling (5+40) epochs，準確率0.378，發現2~4星預測比例大幅
 ## LLM
 - roBERTa訓練3 epochs 準確率0.74
 - BERT訓練 準確率0.7
-- bert-base-chinese
+- bert-base-chinese，使用之後準確度0.76，稍微調整資料上升到0.77
+- 後面繼續清洗資料
 
 
 

@@ -18,10 +18,7 @@ def remove_chinese_stopwords(text):
     return text
 
 
-def remove_special_characters(text):
-    # 去除標點符號和特殊字符
-    text = re.sub(r'[^\w\s]', '', text)
-    return text
+
 
 def lowercase_text(text):
     # 將文本轉為小寫
@@ -68,7 +65,12 @@ def remove_numbers(text):
 
 def remove_characters(text):
     # 去除/, \, #, @, &, *, $, %, ^, (, ), [, ], {, }, <, >, |, `, ~, :, ;, ", ', =, +, -, _, \n
-    text = re.sub(r'[/\\#@&*$%^()\[\]{}<>|`~:;\'"=+-_]', '', text)
+    text = re.sub(r'[/\\#@&*$%\/\[\]{}<>|`:;\'"，_]', '', text)
+    return text
+
+def remove_special_characters(text):
+    # 去除標點符號和特殊字符
+    text = re.sub(r'[^\w\s]', '', text)
     return text
 
 import demoji
@@ -79,6 +81,8 @@ def replace_emojis_icon(text):
     # 去除表情符號，並將表情符號的文字加入到文本後
     for emoji, emoji_text in emojis.items():
         text = text.replace(emoji, emoji_text)
+
+
     
 
 
@@ -105,7 +109,16 @@ def preprocess_text(text):
     # text = lemmatization(text)
     return text
 
-df = pd.read_csv('Banking Apps Reviews Classification/train_df.csv')
+def version6(text):
+    text = replace_emojis_icon(str(text))
+    text = remove_numbers(text)
+    text = remove_characters(text)
+    text = lowercase_text(text)
+    df['text'].fillna('N/A', inplace=True)
+
+    return text
+
+df = pd.read_csv('Banking Apps Reviews Classification/test_df.csv')
 # 找到包含空值的行
 # rows_with_null = df[df['text'].isnull()]
 
@@ -115,10 +128,13 @@ df = pd.read_csv('Banking Apps Reviews Classification/train_df.csv')
 # print(null_indexes)
 # print(df.loc[null_indexes, 'text'])
 # 對text欄位進行中文文本預處理
-df['text'] = df['text'].apply(preprocess_text)
-df['text'] = df['text'].apply(lambda x: x.replace(' ', ''))
+df['text'] = df['text'].apply(version6)
+# 去除重複欄位資料,測試資料不能清理
+# df.drop_duplicates(subset=['text'], inplace=True)
+# 斷詞才需要清理空格
+# df['text'] = df['text'].apply(lambda x: x.replace(' ', ''))
 
 
 # 儲存預處理後的資料為train_preprocess.csv文件
-df.to_csv('Banking Apps Reviews Classification/train_preprocess_v5.csv', index=False)
+df.to_csv('Banking Apps Reviews Classification/test_preprocess_v6.csv', index=False)
 

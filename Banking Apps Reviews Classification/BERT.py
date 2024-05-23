@@ -44,7 +44,7 @@ model = BertForSequenceClassification.from_pretrained("bert-base-chinese", num_l
 
 
 # 設定max_length
-max_length = 35
+max_length = 50
 
 # 將模型移至 GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -57,9 +57,9 @@ val_dataset = CustomDataset(val_texts, val_labels, tokenizer, max_length)
 # 設置訓練參數，包括 Early Stopping
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=5,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
+    num_train_epochs=1,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",

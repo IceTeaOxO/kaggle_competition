@@ -1,3 +1,4 @@
+from transformers import BertForSequenceClassification, Trainer, TrainingArguments
 import pandas as pd
 from transformers import BertTokenizer, BertForSequenceClassification, Trainer, TrainingArguments
 from sklearn.model_selection import train_test_split
@@ -37,12 +38,14 @@ label_map = {"1 顆星": 0, "2 顆星": 1, "3 顆星": 2, "4 顆星": 3, "5 顆�
 train_labels = [label_map[label] for label in train_labels]
 val_labels = [label_map[label] for label in val_labels]
 
-# 初始化tokenizer和模型（使用BERT）
-tokenizer = BertTokenizer.from_pretrained("bert-base-chinese")
-model = BertForSequenceClassification.from_pretrained("bert-base-chinese", num_labels=5)
-
 # 設定max_length
 max_length = 55
+
+# 載入已儲存的模型
+model = BertForSequenceClassification.from_pretrained("./model/saved_model_BERT_chinese_v5")
+tokenizer = BertTokenizer.from_pretrained("bert-base-chinese")
+
+
 
 # 將模型移至 GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -52,34 +55,33 @@ model.to(device)
 train_dataset = CustomDataset(train_texts, train_labels, tokenizer, max_length)
 val_dataset = CustomDataset(val_texts, val_labels, tokenizer, max_length)
 
-# 設置訓練參數，包括 Early Stopping
+
+# 設置訓練參數
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=3,
+    num_train_epochs=3,  # 設定您想要進行的額外訓練時數
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
-    evaluation_strategy="steps",  # 每隔多少步驟進行一次驗證
-    eval_steps=500,  # 每隔500步驟進行一次驗證
-    load_best_model_at_end=True,  # 在訓練結束時載入最佳模型
+    evaluation_strategy="steps",
+    eval_steps=500,
+    load_best_model_at_end=True,
 )
 
-# 定義 Early Stopping Callback
-early_stopping = EarlyStoppingCallback(early_stopping_patience=3)  # 如果性能連續3次沒有改善，則停止訓練
-
-# 定義訓練器，加入 Early Stopping Callback
+# 定義訓練器
 trainer = Trainer(
     model=model,
     args=training_args,
     train_dataset=train_dataset,
     eval_dataset=val_dataset,
-    callbacks=[early_stopping]  # 加入 Early Stopping Callback
+    callbacks=[early_stopping]  # 如果需要使用 Early Stopping Callback，請確保已定義early_stopping
 )
 
-# 開始訓練
+# 繼續訓練
 trainer.train()
+
 
 # 進行推論
 test_data = pd.read_csv("Banking Apps Reviews Classification/test_preprocess_v5.csv")

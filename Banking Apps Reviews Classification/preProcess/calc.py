@@ -3,7 +3,10 @@ import numpy as np
 
 
 # 讀取資料表
-data = pd.read_csv("Banking Apps Reviews Classification/train_preprocess_v6.csv")
+data = pd.read_csv("Banking Apps Reviews Classification/train_df.csv")
+
+# 篩選出score為2 顆星的資料
+# data = data[data["score"] == "1 顆星"]
 
 # 加總text欄位的字數再除以所有text欄位的總數
 data["text_length"] = data["text"].apply(lambda x: len(str(x)))

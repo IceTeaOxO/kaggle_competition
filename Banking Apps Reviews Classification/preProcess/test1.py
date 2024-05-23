@@ -109,7 +109,21 @@ def preprocess_text(text):
     # text = lemmatization(text)
     return text
 
+# 計算text欄位的字數，並將結果添加到text欄位中
+def calc_text(text):
+    text = str(text)+"。留言字數:"+str(len(str(text)))
+    return text
+
+
 def version6(text):
+    text = replace_emojis_icon(str(text))
+    text = remove_characters(text)
+    text = lowercase_text(text)
+    df['text'].fillna('N/A', inplace=True)
+
+    return text
+
+def version7(text):
     text = replace_emojis_icon(str(text))
     text = remove_numbers(text)
     text = remove_characters(text)
@@ -128,13 +142,18 @@ df = pd.read_csv('Banking Apps Reviews Classification/test_df.csv')
 # print(null_indexes)
 # print(df.loc[null_indexes, 'text'])
 # 對text欄位進行中文文本預處理
-df['text'] = df['text'].apply(version6)
-# 去除重複欄位資料,測試資料不能清理
 # df.drop_duplicates(subset=['text'], inplace=True)
+
+df['text'] = df['text'].apply(calc_text)
+df['text'] = df['text'].apply(version6)
+
+
+
+# 去除重複欄位資料,測試資料不能清理
 # 斷詞才需要清理空格
 # df['text'] = df['text'].apply(lambda x: x.replace(' ', ''))
 
 
 # 儲存預處理後的資料為train_preprocess.csv文件
-df.to_csv('Banking Apps Reviews Classification/test_preprocess_v6.csv', index=False)
+df.to_csv('Banking Apps Reviews Classification/test_preprocess_v7.csv', index=False)
 

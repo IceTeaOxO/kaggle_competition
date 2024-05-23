@@ -26,7 +26,7 @@ class CustomDataset(Dataset):
         return inputs
 
 # 讀取訓練資料
-train_data = pd.read_csv("Banking Apps Reviews Classification/train_preprocess_v5.csv")
+train_data = pd.read_csv("Banking Apps Reviews Classification/train_preprocess_v6.csv")
 train_data['text'].fillna('good', inplace=True)
 # 分割訓練集和驗證集
 train_texts, train_labels = train_data["text"].tolist(), train_data["score"].tolist()
@@ -39,12 +39,12 @@ val_labels = [label_map[label] for label in val_labels]
 
 # 初始化tokenizer和模型（使用BERT）
 tokenizer = BertTokenizer.from_pretrained("bert-base-chinese")
-# model = BertForSequenceClassification.from_pretrained("bert-base-chinese", num_labels=5)
-model = BertForSequenceClassification.from_pretrained("./model/saved_model_BERT_chinese_v5", num_labels=5)
+model = BertForSequenceClassification.from_pretrained("bert-base-chinese", num_labels=5)
+# model = BertForSequenceClassification.from_pretrained("./model/saved_model_BERT_chinese_v5", num_labels=5)
 
 
 # 設定max_length
-max_length = 55
+max_length = 35
 
 # 將模型移至 GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -57,10 +57,10 @@ val_dataset = CustomDataset(val_texts, val_labels, tokenizer, max_length)
 # 設置訓練參數，包括 Early Stopping
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=3,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
-    warmup_steps=500,
+    num_train_epochs=1,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
+    warmup_steps=100,
     weight_decay=0.01,
     logging_dir="./logs",
     evaluation_strategy="steps",  # 每隔多少步驟進行一次驗證
@@ -84,7 +84,7 @@ trainer = Trainer(
 trainer.train()
 
 # 進行推論
-test_data = pd.read_csv("Banking Apps Reviews Classification/test_preprocess_v5.csv")
+test_data = pd.read_csv("Banking Apps Reviews Classification/test_preprocess_v6.csv")
 test_data['text'].fillna('good', inplace=True)
 
 test_texts = test_data["text"].tolist()
@@ -105,8 +105,8 @@ pred_stars = [str(round(pred + 1)) + ' 顆星' for pred in predictions]
 
 # 儲存推論結果
 result_df = pd.DataFrame({"index": test_data["index"], "pred": pred_stars})
-result_df.to_csv("inference_result_BERT_chinese_v5_3.csv", index=False)
+result_df.to_csv("inference_result_BERT_chinese_v6_1.csv", index=False)
 
 # 儲存訓練後的模型
-model_path = "./model/saved_model_BERT_chinese_v5_3"  # 指定模型的儲存路徑
+model_path = "./model/saved_model_BERT_chinese_v6_1"  # 指定模型的儲存路徑
 trainer.save_model(model_path)

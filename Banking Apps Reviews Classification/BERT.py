@@ -39,7 +39,9 @@ val_labels = [label_map[label] for label in val_labels]
 
 # 初始化tokenizer和模型（使用BERT）
 tokenizer = BertTokenizer.from_pretrained("bert-base-chinese")
-model = BertForSequenceClassification.from_pretrained("bert-base-chinese", num_labels=5)
+# model = BertForSequenceClassification.from_pretrained("bert-base-chinese", num_labels=5)
+model = BertForSequenceClassification.from_pretrained("./model/saved_model_BERT_chinese_v5", num_labels=5)
+
 
 # 設定max_length
 max_length = 55
@@ -103,8 +105,8 @@ pred_stars = [str(round(pred + 1)) + ' 顆星' for pred in predictions]
 
 # 儲存推論結果
 result_df = pd.DataFrame({"index": test_data["index"], "pred": pred_stars})
-result_df.to_csv("inference_result_BERT_chinese_v5.csv", index=False)
+result_df.to_csv("inference_result_BERT_chinese_v5_3.csv", index=False)
 
 # 儲存訓練後的模型
-model_path = "./model/saved_model_BERT_chinese_v5"  # 指定模型的儲存路徑
+model_path = "./model/saved_model_BERT_chinese_v5_3"  # 指定模型的儲存路徑
 trainer.save_model(model_path)

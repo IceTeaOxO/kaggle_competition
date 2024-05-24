@@ -46,7 +46,7 @@ val_labels = [label_map[label] for label in val_labels]
 tokenizer = AutoTokenizer.from_pretrained("KoichiYasuoka/roberta-base-chinese")
 model = AutoModelForSequenceClassification.from_pretrained("KoichiYasuoka/roberta-base-chinese", num_labels=5)
 # 設定max_length
-max_length = 50
+max_length = 60
 
 # 將模型移至 GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -59,9 +59,9 @@ val_dataset = CustomDataset(val_texts, val_labels, tokenizer, max_length)
 # 設置訓練參數，包括 Early Stopping
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=4,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
+    num_train_epochs=2,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
@@ -107,8 +107,8 @@ pred_stars = [str(round(pred + 1)) + ' 顆星' for pred in predictions]
 
 # 儲存推論結果
 result_df = pd.DataFrame({"index": test_data["index"], "pred": pred_stars})
-result_df.to_csv("inference_result_roBERT_chinese_v7_v2.csv", index=False)
+result_df.to_csv("inference_result_roBERT_chinese_v7_v3.csv", index=False)
 
 # 儲存訓練後的模型
-model_path = "./model/saved_model_roBERT_chinese_v7_v2"  # 指定模型的儲存路徑
+model_path = "./model/saved_model_roBERT_chinese_v7_v3"  # 指定模型的儲存路徑
 trainer.save_model(model_path)

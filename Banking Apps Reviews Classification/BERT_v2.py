@@ -50,7 +50,7 @@ model = BertForSequenceClassification.from_pretrained("ckiplab/bert-base-chinese
 
 
 # 設定max_length
-max_length = 50
+max_length = 70
 
 # 將模型移至 GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -64,8 +64,8 @@ val_dataset = CustomDataset(val_texts, val_labels, tokenizer, max_length)
 training_args = TrainingArguments(
     output_dir="./results",
     num_train_epochs=1,
-    per_device_train_batch_size=3,
-    per_device_eval_batch_size=3,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
@@ -111,7 +111,7 @@ pred_stars = [str(round(pred + 1)) + ' 顆星' for pred in predictions]
 
 # 儲存推論結果
 result_df = pd.DataFrame({"index": test_data["index"], "pred": pred_stars})
-result_df.to_csv("inference_result_BERT_chinese_final_3", index=False)
+result_df.to_csv("inference_result_BERT_chinese_final_5.csv", index=False)
 
 # 儲存訓練後的模型
 # model_path = "./model/saved_model_BERT_chinese_final"  # 指定模型的儲存路徑

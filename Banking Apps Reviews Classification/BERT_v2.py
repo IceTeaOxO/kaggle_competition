@@ -63,9 +63,9 @@ val_dataset = CustomDataset(val_texts, val_labels, tokenizer, max_length)
 # 設置訓練參數，包括 Early Stopping
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=3,
-    per_device_train_batch_size=6,
-    per_device_eval_batch_size=6,
+    num_train_epochs=1,
+    per_device_train_batch_size=3,
+    per_device_eval_batch_size=3,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
@@ -111,8 +111,8 @@ pred_stars = [str(round(pred + 1)) + ' 顆星' for pred in predictions]
 
 # 儲存推論結果
 result_df = pd.DataFrame({"index": test_data["index"], "pred": pred_stars})
-result_df.to_csv("inference_result_BERT_chinese_v7_Q2_v5.csv", index=False)
+result_df.to_csv("inference_result_BERT_chinese_final_3", index=False)
 
 # 儲存訓練後的模型
-model_path = "./model/saved_model_BERT_chinese_v7_Q2_v5"  # 指定模型的儲存路徑
-trainer.save_model(model_path)
+# model_path = "./model/saved_model_BERT_chinese_final"  # 指定模型的儲存路徑
+# trainer.save_model(model_path)
